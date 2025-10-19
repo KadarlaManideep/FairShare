@@ -1,0 +1,289 @@
+.hero-section { 
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(108,92,231,.25), transparent),
+     linear-gradient(135deg, #6c5ce7, #a29bfe); 
+    }
+.hero-overlay { 
+    position:absolute; 
+    inset:0; 
+    background: rgba(0,0,0,.25); 
+}
+.glass-card { 
+    background: rgba(255,255,255,.08); 
+    border: 1px solid rgba(255,255,255,.2); 
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    color: #fff; }
+.lift { 
+    transition: transform .2s ease, box-shadow .2s ease; 
+}
+.lift:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.15); 
+}
+/* ====== FairShare Charts Theme ====== */
+:root {
+    --brand: #6c5ce7;
+    --brand-2: #a29bfe;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --card-bg: #ffffff;
+    --kpi-grad: linear-gradient(135deg, rgba(108,92,231,.12), rgba(162,155,254,.12));
+  }
+  
+  /* Base tweaks */
+  body { color: var(--ink); }
+  h1,h2,h3,h4,h5 { letter-spacing: .2px; }
+  .text-muted { color: var(--muted) !important; }
+  
+  /* Lift effect (reused) */
+  .lift { transition: transform .18s ease, box-shadow .18s ease; border-radius: 1rem; }
+  .lift:hover { transform: translateY(-3px); box-shadow: 0 .9rem 1.6rem rgba(0,0,0,.12); }
+  .card { border-radius: 1rem; border: 1px solid rgba(0,0,0,.06); background: var(--card-bg); }
+  .card-header { border-bottom: 1px solid rgba(0,0,0,.06); border-top-left-radius: 1rem; border-top-right-radius: 1rem; }
+  
+  /* Header strip on this page */
+  header.bg-light {
+    background:
+      radial-gradient(900px 300px at 0% 0%, rgba(108,92,231,.12), transparent),
+      linear-gradient(180deg, rgba(108,92,231,.06), rgba(255,255,255,0));
+  }
+  
+  /* KPI cards */
+  .kpi.card { background: var(--kpi-grad); border: 1px solid rgba(108,92,231,.15); }
+  .kpi .kpi-label { font-size: .9rem; text-transform: none; }
+  .kpi .kpi-value { font-size: 1.85rem; font-weight: 700; line-height: 1.2; color: #111827; }
+  .kpi .kpi-sub { font-size: .9rem; }
+  
+  /* Chart containers */
+  .ratio > canvas { border-radius: .75rem; }
+  .card-body .ratio { background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,0)); border-radius: .75rem; }
+  
+  /* Buttons & links */
+  .btn-primary { background: var(--brand); border-color: var(--brand); }
+  .btn-outline-primary { color: var(--brand); border-color: var(--brand); }
+  .btn-outline-primary:hover { background: var(--brand); color: #fff; }
+  
+  /* Navbar active state */
+  .navbar .nav-link.active { color: #fff; position: relative; }
+  .navbar .nav-link.active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; margin: 0 auto;
+    width: 24px; height: 3px; border-radius: 3px; background: var(--brand-2);
+  }
+  
+  /* Footer */
+  footer { border-top: 1px solid rgba(255,255,255,.08); }
+  
+  /* Small screen spacing */
+  @media (max-width: 575.98px) {
+    .kpi .kpi-value { font-size: 1.6rem; }
+  }
+  
+  /* (Optional) Dark-mode polish for charts page */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e5e7eb;
+      --card-bg: #0f172a;
+      --muted: #94a3b8;
+    }
+    body { background: #0b1220; }
+    .card, .kpi.card { border-color: rgba(255,255,255,.08); }
+    header.bg-light { background: radial-gradient(900px 300px at 0% 0%, rgba(162,155,254,.18), rgba(255,255,255,0)); }
+    .card-header.bg-white { background: #0f172a !important; }
+    .kpi .kpi-value { color: #f8fafc; }
+  }
+  
+  /* ===== Force LIGHT theme for FairShare pages ===== */
+:root { color-scheme: light; } /* keep form controls light */
+
+html, body { background: #f6f7fb !important; color: #111827 !important; }
+
+/* Ensure cards stay light */
+.card, .kpi.card {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: rgba(0,0,0,.08) !important;
+}
+.card-header.bg-white { background: #ffffff !important; }
+
+/* Keep navbar/footer dark on purpose */
+.navbar.bg-dark, footer.bg-dark { background-color: #111827 !important; }
+
+/* ===== FairShare charts.html — match index colors & contrast ===== */
+:root{
+    --brand:#6c5ce7;
+    --brand-2:#a29bfe;
+    --ink:#111827;      /* dark text */
+    --muted:#6b7280;    /* secondary text */
+    --surface:#ffffff;  /* card */
+    --bg:#f6f7fb;       /* page bg */
+  }
+  
+  /* Page background & default text */
+  .page-charts{
+    background: var(--bg);
+    color: var(--ink);
+  }
+  
+  /* Top header strip: use same soft purple hint as index */
+  .page-charts header.bg-light{
+    background:
+      radial-gradient(1000px 340px at 0% 0%, rgba(108,92,231,.10), transparent),
+      linear-gradient(180deg, rgba(108,92,231,.06), rgba(255,255,255,0));
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  .page-charts header .h3,
+  .page-charts header p{ color: var(--ink); }
+  .page-charts header p.text-muted{ color: var(--muted)!important; }
+  
+  /* Cards look like index (rounded, subtle shadow) */
+  .page-charts .card{
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 1rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.06);
+  }
+  .page-charts .card-header.bg-white{
+    background:#fff !important;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    border-top-left-radius:1rem;
+    border-top-right-radius:1rem;
+  }
+  
+  /* KPI cards: ensure strong contrast (fixes “faded value” issue) */
+  .page-charts .kpi.card{
+    background: #fff; /* solid like index cards */
+    border: 1px solid rgba(108,92,231,.18);
+  }
+  .page-charts .kpi *,
+  .page-charts .kpi.card *{
+    opacity: 1 !important;       /* kill any inherited opacity */
+    color: inherit !important;    /* prevent muted cascade */
+  }
+  .page-charts .kpi .kpi-label{ color: var(--muted) !important; font-size:.92rem; }
+  .page-charts .kpi .kpi-value{ color: var(--ink) !important; font-weight:800; font-size:1.9rem; }
+  .page-charts .kpi .kpi-sub{ color: var(--muted) !important; }
+  
+  /* Lift hover (same as index) */
+  .page-charts .lift{ transition: transform .18s ease, box-shadow .18s ease; }
+  .page-charts .lift:hover{ transform: translateY(-3px); box-shadow:0 .9rem 1.6rem rgba(0,0,0,.12); }
+  
+  /* Chart areas */
+  .page-charts .ratio > canvas{ border-radius:.75rem; background: #fff; }
+  .page-charts .card-body .ratio{
+    background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,0));
+    border-radius:.75rem;
+  }
+  
+  /* Navbar active underline (same brand accent as index) */
+  .navbar .nav-link.active{
+    color:#fff;
+    position:relative;
+  }
+  .navbar .nav-link.active::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:-6px; width:24px; height:3px;
+    margin:0 auto; border-radius:3px; background:var(--brand-2);
+  }
+  
+  /* Force light theme on this page regardless of OS dark mode */
+  .page-charts, .page-charts *{ color-scheme: light; }
+  
+  /* ===== charts.html hero matches index hero ===== */
+:root{
+    --brand:#6c5ce7;
+    --brand-2:#a29bfe;
+    --page-bg:#f6f7fb;
+  }
+  
+  /* page background (light) */
+  .page-charts{ background: var(--page-bg); }
+  
+  /* Purple hero like index */
+  .charts-hero{
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(108,92,231,.25), transparent),
+      linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color:#fff;
+    border-bottom: 0; /* we’ll add our own fade separator */
+  }
+  
+  /* subtle dark overlay for contrast on white text */
+  .charts-hero__overlay{
+    position:absolute; inset:0;
+    background: rgba(0,0,0,.15);
+  }
+  
+  /* smooth fade-to-light at bottom of hero */
+  .charts-hero__fade{
+    position:absolute; left:0; right:0; bottom:-1px; height:90px;
+    background: linear-gradient(180deg, rgba(0,0,0,0), var(--page-bg));
+  }
+  
+  /* ensure header text is readable on the hero */
+  .charts-hero h1{ color:#fff; }
+  .charts-hero p{ color: rgba(255,255,255,.85); }
+  
+  /* Keep cards/KPIs looking like the index section below the hero */
+  .page-charts .card{
+    background:#fff; color:#111827;
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:1rem;
+    box-shadow:0 .5rem 1rem rgba(0,0,0,.06);
+  }
+  .page-charts .card-header.bg-white{ background:#fff !important; border-bottom:1px solid rgba(0,0,0,.06); }
+  
+  /* optional: underline for active nav using brand color (matches index) */
+  .navbar .nav-link.active{ color:#fff; position:relative; }
+  .navbar .nav-link.active::after{
+    content:""; position:absolute; left:0; right:0; bottom:-6px;
+    width:24px; height:3px; margin:0 auto; border-radius:3px; background:var(--brand-2);
+  }
+
+  /* ===== about.html — match index/charts hero (no fade) ===== */
+:root{
+    --brand:#6c5ce7;
+    --brand-2:#a29bfe;
+    --page-bg:#f6f7fb;
+    --ink:#111827;
+    --muted:#6b7280;
+  }
+  
+  .page-about{ background: var(--page-bg); color: var(--ink); }
+  
+  /* Purple hero */
+  .about-hero{
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(108,92,231,.25), transparent),
+      linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color:#fff;
+    border-bottom:1px solid rgba(0,0,0,.06); /* straight edge */
+  }
+  .about-hero__overlay{
+    position:absolute; inset:0; background: rgba(0,0,0,.15);
+  }
+  .about-hero h1{ color:#fff; }
+  .about-hero p{ color: rgba(255,255,255,.85); }
+  
+  /* Cards look like other pages */
+  .page-about .card{
+    background:#fff; color:var(--ink);
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:1rem;
+    box-shadow:0 .5rem 1rem rgba(0,0,0,.06);
+  }
+  .page-about .card .h5{ margin-bottom:.75rem; }
+  .page-about .card img{ background:#fff; }
+  
+  /* Active nav underline (brand accent) */
+  .navbar .nav-link.active{
+    color:#fff; position:relative;
+  }
+  .navbar .nav-link.active::after{
+    content:""; position:absolute; left:0; right:0; bottom:-6px;
+    width:24px; height:3px; margin:0 auto; border-radius:3px; background:var(--brand-2);
+  }
+  
+  /* Ensure light theme regardless of OS dark mode */
+  .page-about, .page-about *{ color-scheme: light; }
+  
