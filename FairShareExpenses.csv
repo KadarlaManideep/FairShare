@@ -1,0 +1,11 @@
+#,Created At,Updated At,expense_id,date,group_name,description,category,payer,participants,split_type,total_amount,notes,settled,shares_or_equal_each,amount_each
+1,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,1,2025-09-02T12:00:00.000Z,0204-01-01T12:00:00.000Z,Publix groceries,Groceries,Alex,Alex;Priya;Sam;Jordan,equal,82.4,Weekly groceries,No,,20.6
+2,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,2,2025-09-04T12:00:00.000Z,0204-01-01T12:00:00.000Z,Electric bill (Sept),Utilities,Priya,Alex;Priya;Sam;Jordan,equal,96,Tampa Electric,No,,24
+3,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,3,2025-09-06T12:00:00.000Z,0204-01-01T12:00:00.000Z,Uber to campus,Transport,Sam,Alex;Priya;Sam;Jordan,equal,18.2,Shared ride,No,,4.55
+4,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,4,2025-09-09T12:00:00.000Z,0204-01-01T12:00:00.000Z,Pizza night,Dining,Jordan,Alex;Priya;Sam;Jordan,equal,42.3,2 large pies,No,,10.57
+5,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,5,2025-09-12T12:00:00.000Z,0204-01-01T12:00:00.000Z,Costco run,Groceries,Alex,Alex;Priya;Sam;Jordan,equal,112.6,Bulk items,No,,28.15
+6,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,6,2025-09-15T12:00:00.000Z,0204-01-01T12:00:00.000Z,Water + Trash (Sept),Utilities,Priya,Alex;Priya;Sam;Jordan,equal,74,City utilities,No,,18.5
+7,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,7,2025-09-18T12:00:00.000Z,0204-01-01T12:00:00.000Z,Restaurant — Thai,Dining,Sam,Alex;Priya;Sam;Jordan,equal,58.1,Dinner out,No,,14.53
+8,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,8,2025-09-21T12:00:00.000Z,0204-01-01T12:00:00.000Z,Gas for group trip,Transport,Jordan,Alex;Priya;Sam;Jordan,equal,29.3,Day trip,No,,7.33
+9,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,9,2025-09-24T12:00:00.000Z,0204-01-01T12:00:00.000Z,Target groceries,Groceries,Priya,Alex;Priya;Sam;Jordan,equal,85,Household items,No,,21.25
+10,2025-10-19T08:44:29.009Z,2025-10-19T08:44:29.009Z,10,2025-09-28T12:00:00.000Z,0204-01-01T12:00:00.000Z,Coffee & bagels,Dining,Alex,Alex;Priya;Sam;Jordan,equal,86.5,Brunch,No,,21.62
