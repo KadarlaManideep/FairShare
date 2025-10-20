@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>FairShare — Manage Expenses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Add, edit, and delete shared expenses for your FairShare group." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body class="page-expenses">
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation" aria-label="Primary">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">FairShare</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="nav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="charts.html">Data Visualization</a></li>
+          <li class="nav-item"><a class="nav-link active" href="expenses.html" aria-current="page">Expenses</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO (purple, no fade; same as other pages’ hero) -->
+  <header class="about-hero position-relative overflow-hidden">
+    <div class="about-hero__overlay" aria-hidden="true"></div>
+    <div class="container position-relative py-5">
+      <h1 class="display-5 fw-bold mb-2 text-white">Manage Expenses</h1>
+      <p class="lead mb-0 text-white-50">Add, edit, or delete shared costs and keep the group up to date.</p>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="container my-5">
+    <div class="row g-4">
+      <!-- FORM -->
+      <div class="col-lg-5">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 mb-3">Expense Form</h2>
+            <form id="expenseForm">
+              <input type="hidden" id="expId" />
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label" for="expDesc">Description</label>
+                  <input class="form-control" id="expDesc" placeholder="Groceries, Uber, Rent share…" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="expCategory">Category</label>
+                  <select class="form-select" id="expCategory" required>
+                    <option value="">Choose…</option>
+                    <option>Food</option>
+                    <option>Rent</option>
+                    <option>Travel</option>
+                    <option>Utilities</option>
+                    <option>Misc</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="expAmount">Amount</label>
+                  <input class="form-control" type="number" id="expAmount" min="0" step="0.01" placeholder="120.00" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="expPaidBy">Paid By</label>
+                  <input class="form-control" id="expPaidBy" placeholder="Alex" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="expDate">Date</label>
+                  <input class="form-control" type="date" id="expDate" required />
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="expSplit">Split Among (comma-separated)</label>
+                  <input class="form-control" id="expSplit" placeholder="Alex, Sam, Priya" />
+                  <div class="form-text">Leave blank for “everyone equally” (optional for prototype).</div>
+                </div>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary" id="saveBtn">Save Expense</button>
+                <button type="button" class="btn btn-outline-secondary" id="resetBtn">Reset</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="col-lg-7">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h2 class="h5 mb-0">Expense List</h2>
+              <div class="small text-muted" id="summary"></div>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-middle" id="expTable">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th class="text-end">Amount</th>
+                    <th>Paid By</th>
+                    <th>Split Among</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                  <tr>
+                    <th colspan="3" class="text-end">Total</th>
+                    <th class="text-end" id="totalCell">$0.00</th>
+                    <th colspan="3"></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-danger btn-sm" id="clearAllBtn">Clear All (prototype)</button>
+              <button class="btn btn-outline-primary btn-sm" id="seedBtn">Seed Sample Data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-4 bg-dark text-center text-secondary">
+    <div class="container small">© 2025 FairShare • Prototype for ISM 6225</div>
+  </footer>
+
+  <script>
+    // ===== Simple client-side store (localStorage) =====
+    const KEY = 'fairshare_expenses';
+
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const fmtMoney = (n) => (Number(n) || 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+
+    let expenses = [];        // array of {id, desc, category, amount, paidBy, date, split}
+    let editId = null;        // current row being edited
+
+    function load() {
+      expenses = JSON.parse(localStorage.getItem(KEY) || '[]');
+      render();
+    }
+
+    function save() {
+      localStorage.setItem(KEY, JSON.stringify(expenses));
+      render();
+    }
+
+    function render() {
+      const tbody = $('#expTable tbody');
+      tbody.innerHTML = '';
+      let total = 0;
+
+      expenses
+        .sort((a,b) => (a.date||'').localeCompare(b.date||'')) // sort by date asc
+        .forEach((e) => {
+          total += Number(e.amount) || 0;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${e.date || ''}</td>
+            <td>${escapeHtml(e.desc)}</td>
+            <td>${escapeHtml(e.category)}</td>
+            <td class="text-end">${fmtMoney(e.amount)}</td>
+            <td>${escapeHtml(e.paidBy)}</td>
+            <td>${escapeHtml(e.split || '')}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-secondary me-1" data-action="edit" data-id="${e.id}">Edit</button>
+              <button class="btn btn-sm btn-outline-danger" data-action="del" data-id="${e.id}">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        $('#totalCell').textContent = fmtMoney(total);
+        $('#summary').textContent   = `${expenses.length} item(s) • ${fmtMoney(total)} total`;
+
+    }
+
+    function escapeHtml(s='') {
+      return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+
+    function resetForm() {
+      editId = null;
+      $('#expId').value = '';
+      $('#expDesc').value = '';
+      $('#expCategory').value = '';
+      $('#expAmount').value = '';
+      $('#expPaidBy').value = '';
+      $('#expDate').value = new Date().toISOString().slice(0,10);
+      $('#expSplit').value = '';
+      $('#saveBtn').textContent = 'Save Expense';
+    }
+
+    function upsertExpense(e) {
+      e.preventDefault();
+      const desc = $('#expDesc').value.trim();
+      const category = $('#expCategory').value.trim();
+      const amount = parseFloat($('#expAmount').value);
+      const paidBy = $('#expPaidBy').value.trim();
+      const date = $('#expDate').value;
+      const split = $('#expSplit').value.trim();
+
+      if (!desc || !category || !paidBy || !date || !(amount >= 0)) {
+        alert('Please fill out description, category, amount, paid by, and date.');
+        return;
+      }
+
+      if (editId) {
+        // update existing
+        const idx = expenses.findIndex(x => x.id === editId);
+        if (idx > -1) {
+          expenses[idx] = { id: editId, desc, category, amount, paidBy, date, split };
+        }
+      } else {
+        // add new
+        const id = 'E' + Date.now().toString(36);
+        expenses.push({ id, desc, category, amount, paidBy, date, split });
+      }
+
+      save();
+      resetForm();
+    }
+
+    function onTableClick(ev) {
+      const btn = ev.target.closest('button[data-action]');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      const action = btn.getAttribute('data-action');
+      const idx = expenses.findIndex(x => x.id === id);
+      if (idx === -1) return;
+
+      if (action === 'edit') {
+        const e = expenses[idx];
+        editId = e.id;
+        $('#expId').value = e.id;
+        $('#expDesc').value = e.desc;
+        $('#expCategory').value = e.category;
+        $('#expAmount').value = e.amount;
+        $('#expPaidBy').value = e.paidBy;
+        $('#expDate').value = e.date;
+        $('#expSplit').value = e.split || '';
+        $('#saveBtn').textContent = 'Update Expense';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      if (action === 'del') {
+        if (confirm('Delete this expense?')) {
+          expenses.splice(idx, 1);
+          save();
+          if (editId === id) resetForm();
+        }
+      }
+    }
+
+    function clearAll() {
+      if (!expenses.length) return;
+      if (confirm('Clear ALL expenses?')) {
+        expenses = [];
+        save();
+        resetForm();
+      }
+    }
+
+    function seed() {
+      if (expenses.length && !confirm('Append sample data to existing list?')) return;
+      const today = new Date().toISOString().slice(0,10);
+      const samples = [
+        { desc:'Groceries', category:'Food', amount:84.40, paidBy:'Maya', date:today, split:'Alex, Sam, Priya, Maya' },
+        { desc:'Uber to airport', category:'Travel', amount:36.50, paidBy:'Alex', date:today, split:'Alex, Sam' },
+        { desc:'Electric bill', category:'Utilities', amount:210.00, paidBy:'Jin', date:today, split:'Alex, Sam, Priya, Jin' },
+      ].map(s => ({ id:'E'+(Date.now()+Math.random()).toString(36), ...s }));
+      expenses = expenses.concat(samples);
+      save();
+    }
+
+    // wire up
+    document.addEventListener('DOMContentLoaded', () => {
+      // default date today
+      $('#expDate').value = new Date().toISOString().slice(0,10);
+
+      $('#expenseForm').addEventListener('submit', upsertExpense);
+      $('#resetBtn').addEventListener('click', resetForm);
+      $('#expTable').addEventListener('click', onTableClick);
+      $('#clearAllBtn').addEventListener('click', clearAll);
+      $('#seedBtn').addEventListener('click', seed);
+
+      load();
+      resetForm();
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

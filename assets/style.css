@@ -287,3 +287,12 @@ html, body { background: #f6f7fb !important; color: #111827 !important; }
   /* Ensure light theme regardless of OS dark mode */
   .page-about, .page-about *{ color-scheme: light; }
   
+  /* Smaller chart box */
+.chart-wrap-sm {
+    position: relative;
+    height: 340px;        /* tweak this number to taste (e.g., 280–420px) */
+  }
+  @media (min-width: 1400px){
+    .chart-wrap-sm { height: 360px; }
+  }
+  

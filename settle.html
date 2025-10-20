@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>FairShare — Settle Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="See how much you owe others and how much others owe you based on recorded expenses." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body class="page-about"><!-- reuse light background + nav underline styles -->
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation" aria-label="Primary">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">FairShare</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="nav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="charts.html">Data Visualization</a></li>
+          <li class="nav-item"><a class="nav-link" href="expenses.html">Expenses</a></li>
+          <li class="nav-item"><a class="nav-link active" href="settle.html" aria-current="page">Settle Up</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO (purple, no fade) -->
+  <header class="about-hero position-relative overflow-hidden">
+    <div class="about-hero__overlay" aria-hidden="true"></div>
+    <div class="container position-relative py-5">
+      <h1 class="display-5 fw-bold mb-2 text-white">Settle Up</h1>
+      <p class="lead mb-0 text-white-50">See who you owe and who owes you — net of shared expenses.</p>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="container my-5">
+    <!-- Controls -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label" for="currentUser">I am</label>
+            <select class="form-select" id="currentUser">
+            </select>
+          </div>
+          <div class="col-md-8">
+            <div class="small text-muted">
+              Rule: Each expense is split **equally** among the names in “Split Among”. If left blank, we assume it’s split among **all distinct people seen in your expenses (including the payer)**.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Net summary -->
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h6 text-muted">Net Position</h2>
+            <div class="fs-3 fw-bold" id="netAmount">$0.00</div>
+            <div class="small text-muted" id="netNote">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h6 text-muted">Summary</h2>
+            <div class="d-flex flex-wrap gap-3">
+              <div><strong>You owe (total):</strong> <span id="youOweTotal">$0.00</span></div>
+              <div><strong>Owed to you (total):</strong> <span id="owedToYouTotal">$0.00</span></div>
+            </div>
+            <div class="small text-muted mt-2">Tip: Net = (Owed to you) − (You owe).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="row g-4 mt-1">
+      <!-- You owe others -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 mb-3">You owe</h2>
+            <div class="table-responsive">
+              <table class="table align-middle" id="tblYouOwe">
+                <thead>
+                  <tr><th>To</th><th class="text-end">Amount</th></tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                  <tr><th class="text-end">Total</th><th class="text-end" id="youOweFoot">$0.00</th></tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Others owe you -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 mb-3">Others owe you</h2>
+            <div class="table-responsive">
+              <table class="table align-middle" id="tblOweYou">
+                <thead>
+                  <tr><th>From</th><th class="text-end">Amount</th></tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                  <tr><th class="text-end">Total</th><th class="text-end" id="owedToYouFoot">$0.00</th></tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Utilities -->
+    <div class="d-flex gap-2 mt-4">
+      <a class="btn btn-outline-primary btn-sm" href="expenses.html">Go to Expenses</a>
+      <button class="btn btn-outline-secondary btn-sm" id="recalcBtn">Recalculate</button>
+    </div>
+  </main>
+
+  <footer class="py-4 bg-dark text-center text-secondary">
+    <div class="container small">©️ 2025 FairShare • Prototype for ISM 6225</div>
+  </footer>
+
+  <script>
+    const KEY = 'fairshare_expenses';
+    const $  = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const money = (n) => (Number(n)||0).toLocaleString(undefined,{style:'currency',currency:'USD'});
+
+    let expenses = [];
+    let people   = new Set();
+
+    function load() {
+      expenses = JSON.parse(localStorage.getItem(KEY) || '[]');
+      people = new Set();
+      expenses.forEach(e => {
+        if (e.paidBy) people.add(cleanName(e.paidBy));
+        (e.split || '')
+          .split(',')
+          .map(s => cleanName(s))
+          .filter(Boolean)
+          .forEach(n => people.add(n));
+      });
+
+      // if there are expenses but no split names, at least include the payer names
+      if (!people.size) {
+        expenses.forEach(e => { if (e.paidBy) people.add(cleanName(e.paidBy)); });
+      }
+
+      populateCurrentUser();
+      calcAndRender();
+    }
+
+    function cleanName(s='') { return s.trim().replace(/\s+/g,' '); }
+
+    function populateCurrentUser() {
+      const select = $('#currentUser');
+      const names = Array.from(people).sort();
+
+      // Put Alex first if present; otherwise include 'Alex' as default entry
+      const hasAlex = names.some(n => n.toLowerCase() === 'alex');
+      if (!hasAlex) names.unshift('Alex');
+
+      select.innerHTML = names.map(n => `<option${n==='Alex'?' selected':''}>${n}</option>`).join('');
+    }
+
+    function getParticipants(exp) {
+      // participants = split list if provided; else all distinct people from data incl. payer
+      const list = (exp.split || '')
+        .split(',')
+        .map(s => cleanName(s))
+        .filter(Boolean);
+
+      if (list.length) {
+        // ensure payer included if user typed only others (common mistake)
+        const paid = cleanName(exp.paidBy || '');
+        if (paid && !list.some(n => n.toLowerCase()===paid.toLowerCase())) list.push(paid);
+        return list;
+      }
+
+      // fallback: all distinct names seen (including payer)
+      const all = new Set(people);
+      const paid = cleanName(exp.paidBy || '');
+      if (paid) all.add(paid);
+      return Array.from(all);
+    }
+
+    function calcAndRender() {
+      const me = cleanName($('#currentUser').value || 'Alex');
+
+      // maps: who I owe -> amount, who owes me -> amount
+      const iOwe = new Map();
+      const owesMe = new Map();
+
+      for (const exp of expenses) {
+        const paidBy = cleanName(exp.paidBy || '');
+        const amount = Number(exp.amount) || 0;
+        if (!amount || !paidBy) continue;
+
+        const participants = getParticipants(exp).map(cleanName).filter(Boolean);
+        if (!participants.length) continue;
+
+        const share = amount / participants.length;
+
+        // For each participant (not the payer) -> owes payer "share"
+        for (const p of participants) {
+          if (p.toLowerCase() === paidBy.toLowerCase()) continue;
+          if (p.toLowerCase() === me.toLowerCase() && paidBy.toLowerCase() !== me.toLowerCase()) {
+            // I (me) owe the payer
+            iOwe.set(paidBy, (iOwe.get(paidBy) || 0) + share);
+          } else if (paidBy.toLowerCase() === me.toLowerCase()) {
+            // they owe me
+            owesMe.set(p, (owesMe.get(p) || 0) + share);
+          }
+        }
+      }
+
+      renderTable('#tblYouOwe', iOwe, '#youOweFoot', '#youOweTotal');
+      renderTable('#tblOweYou', owesMe, '#owedToYouFoot', '#owedToYouTotal');
+
+      const net = totalMap(owesMe) - totalMap(iOwe);
+      $('#netAmount').textContent = money(net);
+      $('#netNote').textContent = net >= 0 ? 'You should receive this amount.' : 'You should pay this amount.';
+    }
+
+    function renderTable(tableSel, map, footSel, totalSel){
+      const tbody = document.querySelector(tableSel + ' tbody');
+      tbody.innerHTML = '';
+      const rows = Array.from(map.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
+      for (const [name, amt] of rows) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(name)}</td><td class="text-end">${money(amt)}</td>`;
+        tbody.appendChild(tr);
+      }
+      const tot = totalMap(map);
+      document.querySelector(footSel).textContent = money(tot);
+      document.querySelector(totalSel).textContent = money(tot);
+      if (!rows.length) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="text-muted" colspan="2">No balances.</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function totalMap(m){ let t=0; for(const v of m.values()) t+=v; return t; }
+    function escapeHtml(s=''){ return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      load();
+      $('#currentUser').addEventListener('change', calcAndRender);
+      $('#recalcBtn').addEventListener('click', calcAndRender);
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
